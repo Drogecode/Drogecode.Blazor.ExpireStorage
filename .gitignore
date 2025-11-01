@@ -1,0 +1,9 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# This project
+/Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/*.js
+/Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/*.js.map
