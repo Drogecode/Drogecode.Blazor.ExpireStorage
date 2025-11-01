@@ -4,30 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc2f2270-f176-4754-91ec-cc6f2c891f82" name="Changes" comment="First checkin">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireLocalStorage/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireLocalStorage/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Drogecode.Blazor.ExpireStorage.sln" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/BuilderHelper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/DebugHelper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IExpireStorageService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ILocalStorageExpireService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IOfflineResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ISessionExpireService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/CachedRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/ExpiryStorageModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/ExpireStorageService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/LocalStorageExpireService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/SessionExpireService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/_Imports.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/LocalStorageAccessor.ts" afterDir="false" />
+    <list default="true" id="dc2f2270-f176-4754-91ec-cc6f2c891f82" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +21,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "TDroogers"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage.git",
+    "accountId": "eb553add-6f3d-4bbc-914b-13b78665ff31"
+  }
+}]]></component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -78,8 +68,17 @@
       <updated>1761992468974</updated>
       <workItem from="1761992470199" duration="813000" />
       <workItem from="1761993295493" duration="245000" />
-      <workItem from="1761993551573" duration="140000" />
+      <workItem from="1761993551573" duration="451000" />
     </task>
+    <task id="LOCAL-00001" summary="First checkin">
+      <option name="closed" value="true" />
+      <created>1761993703632</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1761993703632</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

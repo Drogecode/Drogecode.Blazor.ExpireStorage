@@ -5,6 +5,12 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
+        <Version>0.0.1</Version>
+        <Title>Drogecode.Blazor.ExpireStorage</Title>
+        <Authors>Taco Droogers</Authors>
+        <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</RepositoryUrl>
+        <Description>Adds a wrapper on top of Blazored.LocalStorage and Blazored.SessionStorage to expire items from localstorage and sessionstorage after a specified time.</Description>
     </PropertyGroup>
 
     <ItemGroup>
