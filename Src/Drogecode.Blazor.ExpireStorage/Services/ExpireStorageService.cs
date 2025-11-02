@@ -1,10 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Drogecode.Blazor.ExpireStorage.Helpers;
-using Drogecode.Blazor.ExpireStorage.Interfaces;
-using Drogecode.Blazor.ExpireStorage.Models;
 
-namespace Drogecode.Blazor.ExpireStorage.Services;
+namespace Drogecode.Blazor.ExpireStorage;
 
 public class ExpireStorageService : IExpireStorageService
 {

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Drogecode.Blazor.ExpireStorage.Models;
 
-namespace Drogecode.Blazor.ExpireStorage.Interfaces;
+namespace Drogecode.Blazor.ExpireStorage;
 
 public interface IExpireStorageService
 {

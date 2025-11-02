@@ -1,8 +1,6 @@
 ﻿using Blazored.SessionStorage;
-using Drogecode.Blazor.ExpireStorage.Interfaces;
-using Drogecode.Blazor.ExpireStorage.Models;
 
-namespace Drogecode.Blazor.ExpireStorage.Services;
+namespace Drogecode.Blazor.ExpireStorage;
 
 public class SessionExpireService : ISessionExpireService
 {

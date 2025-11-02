@@ -1,11 +1,8 @@
 ﻿using System.Text.Json;
 using Blazored.LocalStorage;
-using Drogecode.Blazor.ExpireStorage.Helpers;
-using Drogecode.Blazor.ExpireStorage.Interfaces;
-using Drogecode.Blazor.ExpireStorage.Models;
 using Microsoft.JSInterop;
 
-namespace Drogecode.Blazor.ExpireStorage.Services;
+namespace Drogecode.Blazor.ExpireStorage;
 
 public class LocalStorageExpireService : ILocalStorageExpireService
 {

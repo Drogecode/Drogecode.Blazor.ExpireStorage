@@ -1,4 +1,4 @@
-﻿namespace Drogecode.Blazor.ExpireStorage.Interfaces;
+﻿namespace Drogecode.Blazor.ExpireStorage;
 
 public interface ILocalStorageExpireService
 {

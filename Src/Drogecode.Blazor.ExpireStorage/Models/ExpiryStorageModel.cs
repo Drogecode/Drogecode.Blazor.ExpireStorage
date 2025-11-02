@@ -1,4 +1,4 @@
-﻿namespace Drogecode.Blazor.ExpireStorage.Models;
+﻿namespace Drogecode.Blazor.ExpireStorage;
 
 internal class ExpiryStorageModel<T>
 {

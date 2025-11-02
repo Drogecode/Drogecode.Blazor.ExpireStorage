@@ -5,13 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc2f2270-f176-4754-91ec-cc6f2c891f82" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Drogecode.Blazor.ExpireStorage/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Drogecode.Blazor.ExpireStorage.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Drogecode.Blazor.ExpireStorage.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.nuspec" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.nuspec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/BuilderHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/BuilderHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/DebugHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Helpers/DebugHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IExpireStorageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IExpireStorageService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ILocalStorageExpireService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ILocalStorageExpireService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IOfflineResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/IOfflineResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ISessionExpireService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Interfaces/ISessionExpireService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/CachedRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/CachedRequest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/ExpiryStorageModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Models/ExpiryStorageModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/ExpireStorageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/ExpireStorageService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/LocalStorageExpireService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/LocalStorageExpireService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/SessionExpireService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Src/Drogecode.Blazor.ExpireStorage/Services/SessionExpireService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,6 +46,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/00d1b34b6bd34e2c83771283e1a69c517a00/c2/a681b3e7/ServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/41cc61bcbc19425f8f9018ba4b79c072e8e918/00/d11a365c/Action`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6c68988dd163714ce4ffda0caaf82c9f6bf2e3bd1313885cb3765685ab3d/ServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/Taco/source/repos/Drogecode.Blazor.ExpireStorage/Src/Drogecode.Blazor.ExpireStorage/Services/ExpireStorageService.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -81,7 +89,7 @@
       <workItem from="1761993295493" duration="245000" />
       <workItem from="1761993551573" duration="451000" />
       <workItem from="1761994730857" duration="1947000" />
-      <workItem from="1762076629049" duration="3531000" />
+      <workItem from="1762076629049" duration="5695000" />
     </task>
     <task id="LOCAL-00001" summary="First checkin">
       <option name="closed" value="true" />
@@ -99,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761996087978</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="NuGet issues">
+      <option name="closed" value="true" />
+      <created>1762080418189</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1762080418189</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,7 +138,8 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="First checkin" />
     <MESSAGE value="NuGet 0.0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="NuGet 0.0.1" />
+    <MESSAGE value="NuGet issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="NuGet issues" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

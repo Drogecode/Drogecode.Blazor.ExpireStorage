@@ -1,4 +1,4 @@
-﻿namespace Drogecode.Blazor.ExpireStorage.Helpers;
+﻿namespace Drogecode.Blazor.ExpireStorage;
 
 public static class DebugHelper
 {

@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
-        <Version>0.0.3</Version>
+        <Version>0.0.4</Version>
         <Title>Drogecode.Blazor.ExpireStorage</Title>
         <Authors>Taco Droogers</Authors>
         <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
