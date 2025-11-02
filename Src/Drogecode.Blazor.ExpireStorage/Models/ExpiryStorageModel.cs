@@ -1,7 +1,7 @@
 ﻿namespace Drogecode.Blazor.ExpireStorage.Models;
 
-public class ExpiryStorageModel<T>
+internal class ExpiryStorageModel<T>
 {
     public long Ttl { get; set; }
-    public T Data { get; set; }
+    public required T Data { get; set; }
 }

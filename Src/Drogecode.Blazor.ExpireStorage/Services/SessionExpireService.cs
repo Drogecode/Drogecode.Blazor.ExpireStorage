@@ -8,8 +8,6 @@ public class SessionExpireService : ISessionExpireService
 {
     private readonly ISessionStorageService _sessionStorageService;
 
-    private static string SESMONTH = "SesMonth";
-
     public SessionExpireService(ISessionStorageService sessionStorageService)
     {
         _sessionStorageService = sessionStorageService;

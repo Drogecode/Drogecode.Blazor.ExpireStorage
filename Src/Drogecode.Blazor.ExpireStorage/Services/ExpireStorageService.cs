@@ -14,7 +14,7 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
     /// <summary>
     /// String to postfix to the key in case multiple users can use the app from the same browser.
     /// </summary>
-    internal static string? Postfix { get; set; }
+    public static string? Postfix { get; set; }
 
     public ExpireStorageService(
         ILocalStorageExpireService localStorageExpireService,
