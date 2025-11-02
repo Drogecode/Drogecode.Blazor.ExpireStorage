@@ -1,4 +1,5 @@
 ﻿using Blazored.SessionStorage;
+using Drogecode.Blazor.ExpireStorage.Models;
 
 namespace Drogecode.Blazor.ExpireStorage;
 

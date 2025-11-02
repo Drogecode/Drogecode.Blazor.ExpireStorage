@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
-        <Version>0.0.4</Version>
+        <Version>0.0.11</Version>
         <Title>Drogecode.Blazor.ExpireStorage</Title>
         <Authors>Taco Droogers</Authors>
         <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
@@ -20,18 +20,20 @@
 
     <ItemGroup>
         <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-        <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
+        <PackageReference Include="Blazored.SessionStorage" Version="2.4.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10"/>
         <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.3">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Remove="wwwroot\js\LocalStorageAccessor.js.map" />
-      <Content Remove="wwwroot\js\LocalStorageAccessor.js" />
+        <Content Update="tsconfig.json">
+            <Pack>false</Pack>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

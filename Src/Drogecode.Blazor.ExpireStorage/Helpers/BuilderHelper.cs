@@ -17,7 +17,6 @@ public static class BuilderHelper
         return services;
     }
 
-
     public static IServiceCollection AddExpireStorageAsSingleton(this IServiceCollection services)
     {
         services.AddBlazoredLocalStorageAsSingleton();

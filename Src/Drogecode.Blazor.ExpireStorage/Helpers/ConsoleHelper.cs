@@ -1,6 +1,6 @@
-﻿namespace Drogecode.Blazor.ExpireStorage;
+﻿namespace Drogecode.Blazor.ExpireStorage.Helpers;
 
-public static class DebugHelper
+internal static class ConsoleHelper
 {
     public static bool LogToConsole { get; set; } = false;
     

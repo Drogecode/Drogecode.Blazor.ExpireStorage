@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using Blazored.LocalStorage;
+using Drogecode.Blazor.ExpireStorage.Helpers;
+using Drogecode.Blazor.ExpireStorage.Models;
 using Microsoft.JSInterop;
 
 namespace Drogecode.Blazor.ExpireStorage;
@@ -35,7 +37,12 @@ public class LocalStorageExpireService : ILocalStorageExpireService
             }
 
             var packages = await _accessorJsRef.Value.InvokeAsync<Dictionary<string, string>?>("getAll");
-            if (packages is null) return;
+            if (packages is null)
+            {
+                ConsoleHelper.WriteLine("No packages found");
+                return;
+            }
+            ConsoleHelper.WriteLine($"Found {packages.Count} packages, current tick {ttl}");
             foreach (var package in packages)
             {
                 ExpiryStorageModel<object>? expiryStorageModel = null;
@@ -51,20 +58,20 @@ public class LocalStorageExpireService : ILocalStorageExpireService
                 }
                 catch (Exception ex)
                 {
-                    DebugHelper.WriteLine("Inner exception");
-                    DebugHelper.WriteLine(ex);
+                    ConsoleHelper.WriteLine("Inner exception");
+                    ConsoleHelper.WriteLine(ex);
                     continue;
                 }
 
                 if (expiryStorageModel.Ttl >= ttl) continue;
-                DebugHelper.WriteLine($"localstorage deleting {package.Key}, expired {new DateTime(expiryStorageModel.Ttl)}");
+                ConsoleHelper.WriteLine($"localstorage deleting {package.Key}, expired {new DateTime(expiryStorageModel.Ttl)}");
                 await _localStorageService.RemoveItemAsync(package.Key);
             }
         }
         catch (Exception ex)
         {
-            DebugHelper.WriteLine("Outer exception");
-            DebugHelper.WriteLine(ex);
+            ConsoleHelper.WriteLine("Outer exception");
+            ConsoleHelper.WriteLine(ex);
         }
         finally
         {
@@ -78,8 +85,14 @@ public class LocalStorageExpireService : ILocalStorageExpireService
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
     {
         var value = await _localStorageService.GetItemAsync<ExpiryStorageModel<T?>>(key, cancellationToken);
-        if (value is null)
+        if (value is null || value.Data is null)
             return default(T);
+        if (value.Ttl < DateTime.UtcNow.Ticks)
+        {
+            ConsoleHelper.WriteLine($"localstorage deleting {key}, expired {new DateTime(value.Ttl)} on trying to get");
+            await _localStorageService.RemoveItemAsync(key, cancellationToken);
+            return default(T);
+        }
         var result = value.Data;
         return result;
     }

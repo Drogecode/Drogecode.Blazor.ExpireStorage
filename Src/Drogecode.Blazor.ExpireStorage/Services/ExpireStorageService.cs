@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Drogecode.Blazor.ExpireStorage.Helpers;
 
 namespace Drogecode.Blazor.ExpireStorage;
 
@@ -12,6 +13,17 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
     /// String to postfix to the key in case multiple users can use the app from the same browser.
     /// </summary>
     public static string? Postfix { get; set; }
+
+    public static bool LogToConsole
+    {
+        get => ConsoleHelper.LogToConsole;
+        set
+        {
+            ConsoleHelper.WriteLine("Logging disabled");
+            ConsoleHelper.LogToConsole = value;
+            ConsoleHelper.WriteLine("Logging enabled");
+        }
+    }
 
     public ExpireStorageService(
         ILocalStorageExpireService localStorageExpireService,
@@ -62,14 +74,14 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
         }
         catch (HttpRequestException)
         {
-            DebugHelper.WriteLine("a HttpRequestException");
+            ConsoleHelper.WriteLine("a HttpRequestException");
         }
         catch (TaskCanceledException)
         {
         }
         catch (Exception ex)
         {
-            DebugHelper.WriteLine(ex);
+            ConsoleHelper.WriteLine(ex);
         }
 
         try
@@ -85,7 +97,7 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
         }
         catch (HttpRequestException)
         {
-            DebugHelper.WriteLine("b HttpRequestException");
+            ConsoleHelper.WriteLine("b HttpRequestException");
         }
         catch (TaskCanceledException)
         {
@@ -93,21 +105,21 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
         catch (JsonException)
         {
             // The object definition could be changed with an update. Deleting the old version and retrying again to get the latest version.
-            DebugHelper.WriteLine($"JsonException for {cacheKey}, Deleting");
+            ConsoleHelper.WriteLine($"JsonException for {cacheKey}, Deleting");
             await _localStorageExpireService.DeleteItemAsync(cacheKey, clt);
             request ??= new CachedRequest();
             if (request.RetryOnJsonException) // Only retry once
             {
-                DebugHelper.WriteLine($"Retry calling {cacheKey}");
+                ConsoleHelper.WriteLine($"Retry calling {cacheKey}");
                 request.RetryOnJsonException = false;
                 return await CachedRequestAsync<TRes>(cacheKey, function, request, clt);
             }
 
-            DebugHelper.WriteLine($"Will not retry {cacheKey}");
+            ConsoleHelper.WriteLine($"Will not retry {cacheKey}");
         }
         catch (Exception ex)
         {
-            DebugHelper.WriteLine(ex);
+            ConsoleHelper.WriteLine(ex);
         }
 
         return default(TRes);
