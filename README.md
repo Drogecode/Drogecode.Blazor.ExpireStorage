@@ -65,7 +65,7 @@ example
 
 @code {
     
-    public async Task<GetMultipleDayItemResponse?> GetDayItemsAsync(DateRange dateRange, Guid userId, CancellationToken clt)
+    public async Task<YourObjectResponse?> GetDayItemsAsync(DateRange dateRange, Guid userId, CancellationToken clt)
     {
         var cacheKey = "CACHE_KEY_HERE"
         var response = await storageService.CachedRequestAsync(cacheKey),
@@ -94,6 +94,17 @@ You can give optional settings to the CachedRequest object.
 
 On, for example, MainLayout.razor.cs, you can set the Postfix to be used for all requests. This is useful if you have multiple users using the same app from the same browser.
 
+`ExpireStorageService.Postfix = userId.ToString();`
+
 ### ICacheableResponse
 
 If a response object implements ICacheableResponse, the FromCache property will be set to true if the result was retrieved from cache.
+
+```c#
+public class YourObjectResponse : ICacheableResponse
+{
+    ...
+    public bool FromCache { get; set; }
+    ...
+}
+```
