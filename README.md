@@ -82,9 +82,9 @@ example
 ### CachedRequest
 You can give optional settings to the CachedRequest object.
 
-* OneCallPerSession - If true, the result will be cached in sessionstorage and not localstorage.
-* OneCallPerCache - If true, the result will be cached in localstorage and not sessionstorage.
-* IgnoreCache - If true, the result will never return a cached value.
+* OneCallPerSession - If true, the result will be returned from sessionstorage if it is not expired.
+* OneCallPerCache - If true, the result will be returned from localstorage if it is not expired.
+* IgnoreCache - If true, never return a cached result.
 * ExpireLocalStorage - The time to expire the result in localstorage. Default is 7 days.
 * ExpireSessionStorage - The time to expire the result in sessionstorage. Default is 15 minutes.
 * CachedAndReplace - If true, The cached result will be returned and the cache will be refreshed for the next call.
