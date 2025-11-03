@@ -2,7 +2,7 @@
 
 internal static class ConsoleHelper
 {
-    public static bool LogToConsole { get; set; } = false;
+    public static bool LogToConsole { get; set; }
     
     /// <summary>
     /// Write to the console when LogToConsole is true;

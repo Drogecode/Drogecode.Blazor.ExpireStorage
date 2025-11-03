@@ -17,12 +17,7 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
     public static bool LogToConsole
     {
         get => ConsoleHelper.LogToConsole;
-        set
-        {
-            ConsoleHelper.WriteLine("Logging disabled");
-            ConsoleHelper.LogToConsole = value;
-            ConsoleHelper.WriteLine("Logging enabled");
-        }
+        set => ConsoleHelper.LogToConsole = value;
     }
 
     public ExpireStorageService(
@@ -39,6 +34,7 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
         CachedRequest? request = null, 
         CancellationToken clt = default)
     {
+        request ??= new CachedRequest();
         try
         {
             if (!string.IsNullOrEmpty(Postfix))
@@ -46,25 +42,36 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
                 cacheKey += $"__{Postfix}";
             }
             if (clt.IsCancellationRequested) return default;
-            request ??= new CachedRequest();
             if (request.CachedAndReplace)
             {
                 var requestCopy = request;
                 _ = Task.Run(async () => await RunSaveAndReturn(cacheKey, function, requestCopy, clt), clt);
             }
 
-            if ((request.CachedAndReplace || request.OneCallPerSession) && !request.ForceCache)
+            if ((request.CachedAndReplace || request.OneCallPerSession) && !request.IgnoreCache)
             {
                 var sessionResult = await _sessionStorageExpireService.GetItemAsync<TRes>(cacheKey, clt);
                 if (sessionResult is not null)
+                {
+                    if (sessionResult is ICacheableResponse response)
+                    {
+                        response.FromCache = true;
+                    }
                     return sessionResult;
+                }
             }
 
-            if ((request.CachedAndReplace || request.OneCallPerCache) && !request.ForceCache)
+            if ((request.CachedAndReplace || request.OneCallPerCache) && !request.IgnoreCache)
             {
                 var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
                 if (cacheResult is not null)
+                {
+                    if (cacheResult is ICacheableResponse response)
+                    {
+                        response.FromCache = true;
+                    }
                     return cacheResult;
+                }
             }
 
             if (!request.CachedAndReplace)
@@ -84,13 +91,18 @@ private readonly ILocalStorageExpireService _localStorageExpireService;
             ConsoleHelper.WriteLine(ex);
         }
 
+        if (request.IgnoreCache)
+        {
+            return default(TRes);
+        }
+
         try
         {
             var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
             cacheResult ??= Activator.CreateInstance<TRes>();
-            if (cacheResult is IOfflineResponse response)
+            if (cacheResult is ICacheableResponse response)
             {
-                response.Offline = true;
+                response.FromCache = true;
             }
 
             return cacheResult;

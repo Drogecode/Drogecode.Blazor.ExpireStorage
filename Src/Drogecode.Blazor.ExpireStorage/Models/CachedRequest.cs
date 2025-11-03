@@ -25,7 +25,7 @@ public class CachedRequest
     /// <summary>
     /// Ignore session cache
     /// </summary>
-    public bool ForceCache { get; set; }
+    public bool IgnoreCache { get; set; }
 
     /// <summary>
     /// Return cached but also call for update

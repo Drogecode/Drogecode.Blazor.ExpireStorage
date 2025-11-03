@@ -16,7 +16,7 @@ public class SessionExpireService : ISessionExpireService
     {
         var value = await _sessionStorageService.GetItemAsync<ExpiryStorageModel<T?>>(key, clt);
         var ttl = DateTime.UtcNow.Ticks;
-        if (value is null || value.Ttl <= ttl) return default;
+        if (value is null || value.Data is null || value.Ttl <= ttl) return default;
         var result = value.Data;
         return result;
     }
