@@ -47,16 +47,6 @@ public static async Task Main(string[] args)
 
 If you use Blazored.LocalStorage or Blazored.SessionStorage with configuration those will need to be registered before Drogecode.Blazor.ExpireStorage.
 
-### Registering services as Singleton - Blazor WebAssembly **ONLY**
-99% of developers will want to register Blazored LocalStorage using the method described above. However, in some very specific scenarios
-developer may have a need to register services as Singleton as apposed to Scoped. This is possible by using the following method:
-
-```csharp
-builder.Services.AddExpireStorageAsSingleton();
-```
-
-This method will not work with Blazor Server applications as Blazor's JS interop services are registered as Scoped and cannot be injected into Singletons.
-
 ## Usage (Blazor WebAssembly)
 example
 
