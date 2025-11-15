@@ -4,6 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.idea/**
+/.vs/**
 
 # This project
 /Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/*.js

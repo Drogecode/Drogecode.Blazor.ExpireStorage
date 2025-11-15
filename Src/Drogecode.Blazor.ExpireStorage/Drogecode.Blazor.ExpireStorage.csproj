@@ -1,41 +1,46 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
-        <Version>0.1.0</Version>
-        <Title>Drogecode.Blazor.ExpireStorage</Title>
-        <Authors>Taco Droogers</Authors>
-        <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</RepositoryUrl>
-        <Description>Adds a wrapper on top of Blazored.LocalStorage and Blazored.SessionStorage to expire items from localstorage and sessionstorage after a specified time.</Description>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
+    <Version>0.1.1</Version>
+    <Title>Drogecode.Blazor.ExpireStorage</Title>
+    <Authors>Taco Droogers</Authors>
+    <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</RepositoryUrl>
+    <Description>Adds a wrapper on top of Blazored.LocalStorage and Blazored.SessionStorage to expire items from localstorage and sessionstorage after a specified time.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <SupportedPlatform Include="browser"/>
-    </ItemGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
-        <PackageReference Include="Blazored.SessionStorage" Version="2.4.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Content Update="tsconfig.json">
-            <Pack>false</Pack>
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Content Update="tsconfig.json">
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>
