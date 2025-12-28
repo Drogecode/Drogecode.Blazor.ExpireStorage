@@ -23,7 +23,7 @@ public class CachedRequest
     public DateTime ExpireSession { get; set; } = DateTime.UtcNow.AddMinutes(15);
 
     /// <summary>
-    /// Ignore session cache
+    /// Ignore session and local storage cache
     /// </summary>
     public bool IgnoreCache { get; set; }
 
