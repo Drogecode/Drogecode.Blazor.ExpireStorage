@@ -4,6 +4,8 @@
 # Drogecode.Blazor.ExpireStorage
 Adds a wrapper on top of [Blazored.LocalStorage](https://github.com/Blazored/LocalStorage) and [Blazored.SessionStorage](https://github.com/Blazored/SessionStorage) to expire items from localstorage and sessionstorage after a specified time.
 
+Blazored is archived, I will build my own implementation.
+
 ## Installing
 
 To install the package add the following line to you csproj file replacing x.x.x with the latest version number (found at the top of this file):
