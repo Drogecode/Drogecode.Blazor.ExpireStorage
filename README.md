@@ -74,13 +74,13 @@ example
 ### CachedRequest
 You can give optional settings to the CachedRequest object.
 
-* OneCallPerSession - If true, the result will be returned from sessionstorage if it is not expired.
-* OneCallPerCache - If true, the result will be returned from localstorage if it is not expired.
-* IgnoreCache - If true, never return a cached result.
-* ExpireLocalStorage - The time to expire the result in localstorage. Default is 7 days.
-* ExpireSessionStorage - The time to expire the result in sessionstorage. Default is 15 minutes.
-* CachedAndReplace - If true, The cached result will be returned and the cache will be refreshed for the next call.
-* RetryOnJsonException - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried.
+* OneCallPerSession - If true, the result will be returned from sessionstorage if it is not expired. Default: false
+* OneCallPerCache - If true, the result will be returned from localstorage if it is not expired. Default: false
+* IgnoreCache - If true, never return a cached result. Default: false
+* ExpireLocalStorage - The time to expire the result in localstorage. Default: 7 days.
+* ExpireSessionStorage - The time to expire the result in sessionstorage. Default: 15 minutes.
+* CachedAndReplace - If true, The cached result will be returned and the cache will be refreshed for the next call. Default: false
+* RetryOnJsonException - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried. Default: true
 
 ### Global settings
 
