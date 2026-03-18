@@ -74,19 +74,26 @@ example
 ### CachedRequest
 You can give optional settings to the CachedRequest object.
 
-* OneCallPerSession - If true, the result will be returned from sessionstorage if it is not expired. Default: false
-* OneCallPerCache - If true, the result will be returned from localstorage if it is not expired. Default: false
-* IgnoreCache - If true, never return a cached result. Default: false
-* ExpireLocalStorage - The time to expire the result in localstorage. Default: 7 days.
-* ExpireSessionStorage - The time to expire the result in sessionstorage. Default: 15 minutes.
-* CachedAndReplace - If true, The cached result will be returned and the cache will be refreshed for the next call. Default: false
-* RetryOnJsonException - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried. Default: true
+* **OneCallPerSession** - If true, the result will be returned from sessionstorage if it is not expired. *Default: false*
+* **OneCallPerCache** - If true, the result will be returned from localstorage if it is not expired. *Default: false*
+* **IgnoreCache** - If true, never return a cached result. *Default: false*
+* **ExpireLocalStorage** - The time to expire the result in localstorage. *Default: 7 days.*
+* **ExpireSessionStorage** - The time to expire the result in sessionstorage. *Default: 15 minutes.*
+* **CachedAndReplace** - If true, The cached result will be returned and the cache will be refreshed for the next call. *Default: false*
+* **AlwaysCacheWhenOffline** - If true, the cached result will be returned when offline, except when IgnoreCache is true. *Default: false*
+* **RetryOnJsonException** - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried. *Default: true*
 
 ### Global settings
 
 On, for example, MainLayout.razor.cs, you can set the Postfix to be used for all requests. This is useful if you have multiple users using the same app from the same browser.
 
 `ExpireStorageService.Postfix = userId.ToString();`
+
+ExpireStorageService knows two properties to monitor if the app is offline.
+
+IsOffline is true when the last request had an `HttpRequestException`.
+
+`ExpireStorageService.IsOffline` and `ExpireStorageService.IsOfflineChanged`
 
 ### ICacheableResponse
 

@@ -31,6 +31,11 @@ public class CachedRequest
     /// Return cached but also call for update
     /// </summary>
     public bool CachedAndReplace { get; set; }
+    
+    /// <summary>
+    /// Always return the cached response when offline, except when IgnoreCache is true.
+    /// </summary>
+    public bool AlwaysCacheWhenOffline { get; set; }
 
     /// <summary>
     /// Retry once on JsonException.

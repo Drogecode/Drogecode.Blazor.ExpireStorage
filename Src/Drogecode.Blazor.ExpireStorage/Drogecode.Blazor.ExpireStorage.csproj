@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
-    <Version>0.1.2</Version>
+    <Version>0.2.0</Version>
     <Title>Drogecode.Blazor.ExpireStorage</Title>
     <Authors>Taco Droogers</Authors>
     <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
@@ -13,6 +13,16 @@
     <Description>Adds a wrapper on top of Blazored.LocalStorage and Blazored.SessionStorage to expire items from localstorage and sessionstorage after a specified time.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\Drogecode.Blazor.ExpireStorage.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\Drogecode.Blazor.ExpireStorage.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,11 +38,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
   </ItemGroup>
 
