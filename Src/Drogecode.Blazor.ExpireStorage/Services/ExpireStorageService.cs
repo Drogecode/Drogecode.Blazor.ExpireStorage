@@ -15,7 +15,7 @@ public class ExpireStorageService : IExpireStorageService
     /// </summary>
     public static string? Postfix { get; set; }
 
-    public static EventCallback<bool> IsOfflineChanged { get; set; }
+    public static event Func<bool, Task>? IsOfflineChanged;
 
     /// <summary>
     /// True if the last request failed.
@@ -27,7 +27,7 @@ public class ExpireStorageService : IExpireStorageService
         {
             if (field == value) return;
             field = value;
-            IsOfflineChanged.InvokeAsync(field);
+            IsOfflineChanged?.Invoke(field);
         }
     }
 
