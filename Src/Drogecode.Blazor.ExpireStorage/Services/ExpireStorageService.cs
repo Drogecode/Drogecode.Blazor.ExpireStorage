@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Drogecode.Blazor.ExpireStorage.Helpers;
-using Microsoft.AspNetCore.Components;
 
 namespace Drogecode.Blazor.ExpireStorage;
 
@@ -45,10 +44,12 @@ public class ExpireStorageService : IExpireStorageService
         _sessionStorageExpireService = sessionStorageExpireService;
     }
 
+    
     public async Task<TRes?> CachedRequestAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] TRes>(
         string cacheKey,
         Func<Task<TRes>> function,
         CachedRequest? request = null,
+        TRes? defaultResponse = default,
         CancellationToken clt = default)
     {
         request ??= new CachedRequest();
@@ -59,7 +60,7 @@ public class ExpireStorageService : IExpireStorageService
                 cacheKey += $"__{Postfix}";
             }
 
-            if (clt.IsCancellationRequested) return default;
+            if (clt.IsCancellationRequested) return defaultResponse;
             if (request.CachedAndReplace && !(IsOffline && request.AlwaysCacheWhenOffline))
             {
                 var requestCopy = request;
@@ -114,7 +115,7 @@ public class ExpireStorageService : IExpireStorageService
 
         if (request.IgnoreCache)
         {
-            return default(TRes);
+            return defaultResponse;
         }
 
         try
@@ -145,7 +146,7 @@ public class ExpireStorageService : IExpireStorageService
             {
                 ConsoleHelper.WriteLine($"Retry calling {cacheKey}");
                 request.RetryOnJsonException = false;
-                return await CachedRequestAsync<TRes>(cacheKey, function, request, clt);
+                return await CachedRequestAsync(cacheKey, function, request, defaultResponse, clt);
             }
 
             ConsoleHelper.WriteLine($"Will not retry {cacheKey}");
@@ -155,7 +156,7 @@ public class ExpireStorageService : IExpireStorageService
             ConsoleHelper.WriteLine(ex);
         }
 
-        return default(TRes);
+        return defaultResponse;
     }
 
     private async Task<TRes> RunSaveAndReturn<TRes>(string cacheKey, Func<Task<TRes>> function, CachedRequest request, CancellationToken clt)

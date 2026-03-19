@@ -62,7 +62,9 @@ example
         var cacheKey = "CACHE_KEY_HERE"
         var response = await storageService.CachedRequestAsync(cacheKey),
             async () => await apiClient.GetItemsAsync(),
-            new CachedRequest{CachedAndReplace = true}, clt);
+            new CachedRequest{CachedAndReplace = true},
+            new YourObjectResponse(),
+            clt);
         return response;
     }
 
