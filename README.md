@@ -99,7 +99,7 @@ IsOffline is true when the last request had an `HttpRequestException`.
 
 ### ICacheableResponse
 
-If a response object implements ICacheableResponse, the FromCache property will be set to true if the result was retrieved from cache.
+If a response object implements ICacheableResponse, the HandledBy property will be set to `HandledBy.Cache` if the result was retrieved from cache and to `HandledBy.Default` if the default provided by the caller was used.
 
 ```c#
 using Drogecode.Blazor.ExpireStorage;
