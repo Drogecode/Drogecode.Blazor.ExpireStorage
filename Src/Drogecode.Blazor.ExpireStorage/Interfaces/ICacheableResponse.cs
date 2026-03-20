@@ -2,5 +2,5 @@
 
 public interface ICacheableResponse
 {
-    public bool FromCache { get; set; }
+    public HandledBy HandledBy { get; set; }
 }

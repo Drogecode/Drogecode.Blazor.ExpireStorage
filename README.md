@@ -102,10 +102,11 @@ IsOffline is true when the last request had an `HttpRequestException`.
 If a response object implements ICacheableResponse, the FromCache property will be set to true if the result was retrieved from cache.
 
 ```c#
+using Drogecode.Blazor.ExpireStorage;
 public class YourObjectResponse : ICacheableResponse
 {
     ...
-    public bool FromCache { get; set; }
+    public HandledBy HandledBy { get; set; }
     ...
 }
 ```

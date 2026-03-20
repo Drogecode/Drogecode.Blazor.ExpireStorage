@@ -60,7 +60,10 @@ public class ExpireStorageService : IExpireStorageService
                 cacheKey += $"__{Postfix}";
             }
 
-            if (clt.IsCancellationRequested) return defaultResponse;
+            if (clt.IsCancellationRequested)
+            {
+                return BuildResponse(defaultResponse, HandledBy.Default);
+            }
             if (request.CachedAndReplace && !(IsOffline && request.AlwaysCacheWhenOffline))
             {
                 var requestCopy = request;
@@ -70,29 +73,13 @@ public class ExpireStorageService : IExpireStorageService
             if ((request.CachedAndReplace || request.OneCallPerSession || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
             {
                 var sessionResult = await _sessionStorageExpireService.GetItemAsync<TRes>(cacheKey, clt);
-                if (sessionResult is not null)
-                {
-                    if (sessionResult is ICacheableResponse response)
-                    {
-                        response.FromCache = true;
-                    }
-
-                    return sessionResult;
-                }
+                return BuildResponse(sessionResult, HandledBy.Cache);
             }
 
             if ((request.CachedAndReplace || request.OneCallPerCache || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
             {
                 var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-                if (cacheResult is not null)
-                {
-                    if (cacheResult is ICacheableResponse response)
-                    {
-                        response.FromCache = true;
-                    }
-
-                    return cacheResult;
-                }
+                return BuildResponse(cacheResult, HandledBy.Cache);
             }
 
             if (!request.CachedAndReplace)
@@ -115,19 +102,14 @@ public class ExpireStorageService : IExpireStorageService
 
         if (request.IgnoreCache)
         {
-            return defaultResponse;
+            return BuildResponse(defaultResponse, HandledBy.Default);
         }
 
         try
         {
             var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
             cacheResult ??= Activator.CreateInstance<TRes>();
-            if (cacheResult is ICacheableResponse response)
-            {
-                response.FromCache = true;
-            }
-
-            return cacheResult;
+            return BuildResponse(cacheResult, HandledBy.Cache);
         }
         catch (HttpRequestException)
         {
@@ -156,16 +138,26 @@ public class ExpireStorageService : IExpireStorageService
             ConsoleHelper.WriteLine(ex);
         }
 
-        return defaultResponse;
+        return BuildResponse(defaultResponse, HandledBy.Default);
     }
 
-    private async Task<TRes> RunSaveAndReturn<TRes>(string cacheKey, Func<Task<TRes>> function, CachedRequest request, CancellationToken clt)
+    private async Task<TRes?> RunSaveAndReturn<TRes>(string cacheKey, Func<Task<TRes>> function, CachedRequest request, CancellationToken clt)
     {
         var result = await function();
         await _localStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireLocalStorage, clt);
         if (request.OneCallPerSession)
             await _sessionStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireSession, clt);
         IsOffline = false;
+        return BuildResponse(result, HandledBy.Function);
+    }
+
+    private static TRes? BuildResponse<TRes>(TRes? result, HandledBy handledBy)
+    {
+        if (result is null) return result;
+        if (result is ICacheableResponse response)
+        {
+            response.HandledBy = handledBy;
+        }
         return result;
     }
 }
