@@ -125,4 +125,13 @@ public class ExpireStorageServiceTests : IDisposable
 
         response.Should().BeNull();
     }
+
+    [Fact]
+    public async Task OneCallPerSessionTest()
+    {
+        const string cacheKey = "OneCallPerSessionTest";
+        var response = await _expireStorageService.CachedRequestAsync<string>(cacheKey, () => Task.FromResult("test"), new CachedRequest{OneCallPerSession = true, IgnoreCache = false, CachedAndReplace = false}, clt: TestContext.Current.CancellationToken);
+        Assert.NotNull(response);
+        response.Should().Be("test");
+    }
 }
