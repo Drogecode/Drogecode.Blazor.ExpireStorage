@@ -18,9 +18,11 @@ public class LocalStorageServiceMock : ILocalStorageService
 
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = new CancellationToken())
     {
-        if (_memoryCache.TryGetValue(key, out var value))
+        if (_memoryCache.TryGetValue(key, out object? value))
         {
-            return (T)value!;
+            if (value is null) return default;
+            // The value in cache is likely ExpiryStorageModel<T>
+            try { return (T)value; } catch { return default; }
         }
         return default;
     }
@@ -52,7 +54,7 @@ public class LocalStorageServiceMock : ILocalStorageService
 
     public async ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = new CancellationToken())
     {
-        throw new NotImplementedException();
+        _memoryCache.Remove(key);
     }
 
     public async ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken cancellationToken = new CancellationToken())
