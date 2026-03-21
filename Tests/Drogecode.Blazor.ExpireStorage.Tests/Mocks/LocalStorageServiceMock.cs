@@ -18,7 +18,11 @@ public class LocalStorageServiceMock : ILocalStorageService
 
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = new CancellationToken())
     {
-        throw new NotImplementedException();
+        if (_memoryCache.TryGetValue(key, out var value))
+        {
+            return (T)value!;
+        }
+        return default;
     }
 
     public async ValueTask<string?> GetItemAsStringAsync(string key, CancellationToken cancellationToken = new CancellationToken())
