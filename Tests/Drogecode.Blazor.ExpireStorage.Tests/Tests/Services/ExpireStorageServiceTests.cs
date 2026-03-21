@@ -126,10 +126,4 @@ public class ExpireStorageServiceTests : IDisposable
 
         response.Should().BeNull();
     }
-
-    [Fact]
-    public async Task FailingTestToTestWorkflow()
-    {
-        Assert.True(false);
-    }
 }
