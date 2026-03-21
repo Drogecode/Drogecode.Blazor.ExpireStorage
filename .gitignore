@@ -7,5 +7,6 @@ riderModule.iml
 /.vs/**
 
 # This project
+/Drogecode.Blazor.ExpireStorage.sln.DotSettings.user
 /Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/*.js
 /Src/Drogecode.Blazor.ExpireStorage/wwwroot/js/*.js.map

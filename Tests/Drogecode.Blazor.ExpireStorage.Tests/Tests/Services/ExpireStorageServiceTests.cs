@@ -24,7 +24,7 @@ public class ExpireStorageServiceTests : IDisposable
     public async Task MinimalRequestTest()
     {
         const string cacheKey = "MinimalRequestTest";
-        var response = await _expireStorageService.CachedRequestAsync<string>(cacheKey, () => Task.FromResult("test"), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        var response = await _expireStorageService.CachedRequestAsync<string>(cacheKey, () => Task.FromResult("test"), clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response);
         response.Should().Be("test");
     }
@@ -36,7 +36,7 @@ public class ExpireStorageServiceTests : IDisposable
         var response = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse
         {
             Data = "test"
-        }), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        }), clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);
         response.HandledBy.Should().Be(HandledBy.Function);
         response.Data.Should().Be("test");
@@ -50,7 +50,6 @@ public class ExpireStorageServiceTests : IDisposable
             {
                 Data = "test"
             }),
-            new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) },
             clt: TestContext.Current.CancellationToken);
         Assert.NotNull(addToCache?.Data);
         addToCache.HandledBy.Should().Be(HandledBy.Function);
@@ -58,7 +57,7 @@ public class ExpireStorageServiceTests : IDisposable
             {
                 Data = "not called"
             }),
-            new CachedRequest { OneCallPerCache = true, ExpireLocalStorage = DateTime.UtcNow.AddDays(7) },
+            new CachedRequest { OneCallPerCache = true },
             clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);
         response.HandledBy.Should().Be(HandledBy.Cache);
@@ -70,17 +69,17 @@ public class ExpireStorageServiceTests : IDisposable
     {
         const string cacheKey = "PostfixTest";
         ExpireStorageService.Postfix = "user1";
-        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "data1" }), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "data1" }), clt: TestContext.Current.CancellationToken);
 
         ExpireStorageService.Postfix = "user2";
-        var response2 = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "data2" }), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        var response2 = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "data2" }), clt: TestContext.Current.CancellationToken);
 
         Assert.NotNull(response2?.Data);
         response2.Data.Should().Be("data2");
         response2.HandledBy.Should().Be(HandledBy.Function);
 
         ExpireStorageService.Postfix = "user1";
-        var response1FromCache = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "not called" }), new CachedRequest { OneCallPerCache = true, ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        var response1FromCache = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "not called" }), new CachedRequest { OneCallPerCache = true }, clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response1FromCache?.Data);
         response1FromCache.Data.Should().Be("data1");
         response1FromCache.HandledBy.Should().Be(HandledBy.Cache);
@@ -90,7 +89,7 @@ public class ExpireStorageServiceTests : IDisposable
     public async Task IgnoreCacheTest()
     {
         const string cacheKey = "IgnoreCacheTest";
-        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "cached" }), new CachedRequest { OneCallPerCache = true, ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "cached" }), new CachedRequest { OneCallPerCache = true }, clt: TestContext.Current.CancellationToken);
 
         var response = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "fresh" }), new CachedRequest { IgnoreCache = true }, clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);
@@ -104,14 +103,14 @@ public class ExpireStorageServiceTests : IDisposable
         const string cacheKey = "OfflineTest";
         try
         {
-            await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => throw new HttpRequestException(), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+            await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => throw new HttpRequestException(), clt: TestContext.Current.CancellationToken);
         }
         catch (HttpRequestException) { }
 
         ExpireStorageService.IsOffline.Should().BeTrue();
 
         // Recover
-        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "recovered" }), new CachedRequest { ExpireLocalStorage = DateTime.UtcNow.AddDays(7) }, clt: TestContext.Current.CancellationToken);
+        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "recovered" }), clt: TestContext.Current.CancellationToken);
         ExpireStorageService.IsOffline.Should().BeFalse();
     }
 
@@ -120,7 +119,7 @@ public class ExpireStorageServiceTests : IDisposable
     {
         const string cacheKey = "CancellationTokenTest";
         using var cts = new CancellationTokenSource();
-        cts.Cancel();
+        await cts.CancelAsync();
 
         var response = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "test" }), clt: cts.Token);
 
