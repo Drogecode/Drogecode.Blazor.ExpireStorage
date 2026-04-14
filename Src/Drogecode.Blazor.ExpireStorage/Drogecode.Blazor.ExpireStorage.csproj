@@ -47,7 +47,8 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\README.md">
-      <Pack>false</Pack>
+      <Link>README.md</Link>
+      <Pack>true</Pack>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
