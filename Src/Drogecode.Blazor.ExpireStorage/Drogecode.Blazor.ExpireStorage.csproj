@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Drogecode.Blazor.ExpireStorage</RootNamespace>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
     <Title>Drogecode.Blazor.ExpireStorage</Title>
     <Authors>Taco Droogers</Authors>
     <PackageProjectUrl>https://github.com/Drogecode/Drogecode.Blazor.ExpireStorage</PackageProjectUrl>
@@ -47,7 +47,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\README.md">
-      <Link>README.md</Link>
       <Pack>true</Pack>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
