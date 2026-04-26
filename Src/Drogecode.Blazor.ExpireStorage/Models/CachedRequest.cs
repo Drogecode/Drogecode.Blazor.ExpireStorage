@@ -35,7 +35,7 @@ public class CachedRequest
     /// <summary>
     /// Always return the cached response when offline, except when IgnoreCache is true.
     /// </summary>
-    public bool AlwaysCacheWhenOffline { get; set; }
+    public bool CacheWhenOffline { get; set; }
 
     /// <summary>
     /// Retry once on JsonException.

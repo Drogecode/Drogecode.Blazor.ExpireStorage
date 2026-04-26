@@ -44,7 +44,7 @@ public class ExpireStorageService : IExpireStorageService
         _sessionStorageExpireService = sessionStorageExpireService;
     }
 
-    
+
     public async Task<TRes?> CachedRequestAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] TRes>(
         string cacheKey,
         Func<Task<TRes>> function,
@@ -64,27 +64,28 @@ public class ExpireStorageService : IExpireStorageService
             {
                 return BuildResponse(defaultResponse, HandledBy.Default);
             }
-            if (request.CachedAndReplace && !(IsOffline && request.AlwaysCacheWhenOffline))
+
+            if (request.CachedAndReplace && !(IsOffline && request.CacheWhenOffline))
             {
                 var requestCopy = request;
                 _ = Task.Run(async () => await RunSaveAndReturn(cacheKey, function, requestCopy, clt), clt);
             }
 
-            if ((request.CachedAndReplace || request.OneCallPerSession || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
+            if ((request.CachedAndReplace || request.OneCallPerSession || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
             {
                 var sessionResult = await _sessionStorageExpireService.GetItemAsync<TRes>(cacheKey, clt);
                 if (sessionResult is not null)
                 {
-                    return BuildResponse(sessionResult, HandledBy.Cache);
+                    return BuildResponse(sessionResult, HandledBy.Session);
                 }
             }
 
-            if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
+            if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
             {
                 var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
                 if (cacheResult is not null)
                 {
-                    return BuildResponse(cacheResult, HandledBy.Cache);
+                    return BuildResponse(cacheResult, HandledBy.LocalStorage);
                 }
             }
 
@@ -114,8 +115,19 @@ public class ExpireStorageService : IExpireStorageService
         try
         {
             var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-            cacheResult ??= Activator.CreateInstance<TRes>();
-            return BuildResponse(cacheResult, HandledBy.Cache);
+            if (cacheResult is not null)
+            {
+                return BuildResponse(cacheResult, HandledBy.LocalStorage);
+            }
+
+            cacheResult = await _sessionStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
+            if (cacheResult is not null)
+            {
+                return BuildResponse(cacheResult, HandledBy.Session);
+            }
+
+            cacheResult ??= defaultResponse ?? Activator.CreateInstance<TRes>();
+            return BuildResponse(cacheResult, HandledBy.Default);
         }
         catch (HttpRequestException)
         {
@@ -152,7 +164,10 @@ public class ExpireStorageService : IExpireStorageService
         var result = await function();
         await _localStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireLocalStorage, clt);
         if (request.OneCallPerSession)
+        {
             await _sessionStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireSession, clt);
+        }
+
         IsOffline = false;
         return BuildResponse(result, HandledBy.Function);
     }
@@ -164,6 +179,7 @@ public class ExpireStorageService : IExpireStorageService
         {
             response.HandledBy = handledBy;
         }
+
         return result;
     }
 }

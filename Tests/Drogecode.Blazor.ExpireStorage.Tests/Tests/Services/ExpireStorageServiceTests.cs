@@ -60,7 +60,7 @@ public class ExpireStorageServiceTests : IDisposable
             new CachedRequest { OneCallPerLocalStorage = true },
             clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);
-        response.HandledBy.Should().Be(HandledBy.Cache);
+        response.HandledBy.Should().Be(HandledBy.LocalStorage);
         response.Data.Should().Be("test");
     }
 
@@ -82,7 +82,7 @@ public class ExpireStorageServiceTests : IDisposable
         var response1FromCache = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "not called" }), new CachedRequest { OneCallPerLocalStorage = true }, clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response1FromCache?.Data);
         response1FromCache.Data.Should().Be("data1");
-        response1FromCache.HandledBy.Should().Be(HandledBy.Cache);
+        response1FromCache.HandledBy.Should().Be(HandledBy.LocalStorage);
     }
 
     [Fact]

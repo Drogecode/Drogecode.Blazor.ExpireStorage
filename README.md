@@ -1,13 +1,14 @@
 [![Nuget version](https://img.shields.io/nuget/v/Drogecode.Blazor.ExpireStorage.svg?logo=nuget)](https://www.nuget.org/packages/Drogecode.Blazor.ExpireStorage/)
 
 # Drogecode.Blazor.ExpireStorage
-Adds a wrapper on top of [Blazored.LocalStorage](https://github.com/Blazored/LocalStorage) and [Blazored.SessionStorage](https://github.com/Blazored/SessionStorage) to expire items from localstorage and sessionstorage after a specified time.
 
-Blazored is archived, I will build my own implementation.
+Store api responses in localstorage and sessionstorage.
+
+Configure if the api should be called or the cached value will be returned if available.
 
 ## Installing
 
-To install the package add the following line to you csproj file replacing x.x.x with the latest version number (found at the top of this file):
+To install the package, add the following line to the csproj file. Replacing x.x.x with the latest version number (found at the top of this file):
 
 ```
 <PackageReference Include="Drogecode.Blazor.ExpireStorage" Version="x.x.x" />
@@ -23,7 +24,7 @@ If you're using Visual Studio you can also install via the built in NuGet packag
 
 ## Setup
 
-You will need to register the expire storage services with the service collection in your _Startup.cs_ file in Blazor Server.
+You will need to register the expire storage services with the service collection in your *Startup.cs* file in Blazor Server.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -32,7 +33,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ``` 
 
-Or in your _Program.cs_ file in Blazor WebAssembly.
+Or in your *Program.cs* file in Blazor WebAssembly.
 
 ```c#
 public static async Task Main(string[] args)
@@ -45,8 +46,6 @@ public static async Task Main(string[] args)
     await builder.Build().RunAsync();
 }
 ```
-
-If you use Blazored.LocalStorage or Blazored.SessionStorage with configuration those will need to be registered before Drogecode.Blazor.ExpireStorage.
 
 ## Usage (Blazor WebAssembly)
 example
@@ -75,26 +74,34 @@ example
 ### CachedRequest
 You can give optional settings to the CachedRequest object.
 
-* **OneCallPerSession** - If true, the result will be returned from sessionstorage if it is not expired. *Default: false*
 * **OneCallPerLocalStorage** - If true, the result will be returned from localstorage if it is not expired. *Default: false*
+* **OneCallPerSession** - If true, the result will be returned from sessionstorage if it is not expired. *Default: false*
+* **ExpireLocalStorage** - The DateTime the localstorage value will be expired. *Default: 7 days.*
+* **ExpireSessionStorage** - The DateTime the sessionstorage value will be expired. *Default: 15 minutes.*
 * **IgnoreCache** - If true, never return a cached result. *Default: false*
-* **ExpireLocalStorage** - The time to expire the result in localstorage. *Default: 7 days.*
-* **ExpireSessionStorage** - The time to expire the result in sessionstorage. *Default: 15 minutes.*
 * **CachedAndReplace** - If true, The cached result will be returned and the cache will be refreshed for the next call. *Default: false*
-* **AlwaysCacheWhenOffline** - If true, the cached result will be returned when offline, except when IgnoreCache is true. *Default: false*
-* **RetryOnJsonException** - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried. *Default: true*
+* **CacheWhenOffline** - If true, the cached result will be returned when offline, except when IgnoreCache is true. *Default: false*
+* **RetryOnJsonException** - If true, If a JSON exception occurs, the cache will be cleared and the request will be retried once. This will minimize the effect if a breaking change was introduced in the JSON value. *Default: true*
 
 ### Global settings
 
+#### Postfix
 On, for example, MainLayout.razor.cs, you can set the Postfix to be used for all requests. This is useful if you have multiple users using the same app from the same browser.
 
 `ExpireStorageService.Postfix = userId.ToString();`
 
+#### IsOffline
 ExpireStorageService knows two properties to monitor if the app is offline.
 
-IsOffline is true when the last request had an `HttpRequestException`.
+IsOffline is true when the last request had an `HttpRequestException`, after a successful request IsOffline will be false.
 
 `ExpireStorageService.IsOffline` and `ExpireStorageService.IsOfflineChanged`
+
+#### LogToConsole
+
+ExpireStorageService can log to the console if you want to see what is happening, *default: false*.
+
+`ExpireStorageService.LogToConsole = true;`
 
 ### ICacheableResponse
 
@@ -109,3 +116,13 @@ public class YourObjectResponse : ICacheableResponse
     ...
 }
 ```
+
+## Cache
+
+The cache is stored as a base64 string and serialized / deserialized using System.Text.Json.
+
+### Cleanup
+
+One minute after the app starts, the local storage cache will be cleared from all expired values.
+
+Items that are expired but not yet deleted will not be returned.

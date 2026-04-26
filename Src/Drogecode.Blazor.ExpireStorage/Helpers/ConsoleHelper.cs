@@ -26,6 +26,7 @@ internal static class ConsoleHelper
     public static void WriteLine(string message, Exception exception)
     {
         if (!LogToConsole) return;
-        Console.WriteLine(message, exception);
+        Console.WriteLine(message);
+        Console.WriteLine(exception);
     }
 }

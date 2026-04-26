@@ -1,20 +1,21 @@
-﻿using Blazored.SessionStorage;
+﻿using Drogecode.Blazor.ExpireStorage.Enums;
+using Drogecode.Blazor.ExpireStorage.Interfaces;
 using Drogecode.Blazor.ExpireStorage.Models;
 
 namespace Drogecode.Blazor.ExpireStorage;
 
 public class SessionExpireService : ISessionExpireService
 {
-    private readonly ISessionStorageService _sessionStorageService;
+    private readonly IExpireStorageJsService _expireStorageJsService;
 
-    public SessionExpireService(ISessionStorageService sessionStorageService)
+    public SessionExpireService(IExpireStorageJsService expireStorageJsService)
     {
-        _sessionStorageService = sessionStorageService;
+        _expireStorageJsService = expireStorageJsService;
     }
 
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken clt = default)
     {
-        var value = await _sessionStorageService.GetItemAsync<ExpiryStorageModel<T?>>(key, clt);
+        var value = await _expireStorageJsService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserSession);
         var ttl = DateTime.UtcNow.Ticks;
         if (value is null || value.Data is null || value.Ttl <= ttl) return default;
         var result = value.Data;
@@ -28,6 +29,6 @@ public class SessionExpireService : ISessionExpireService
             Data = data,
             Ttl = expire.Ticks
         };
-        await _sessionStorageService.SetItemAsync(key, value, clt);
+        await _expireStorageJsService.StoreItem(key, StorageLocation.BrowserSession, value);
     }
 }

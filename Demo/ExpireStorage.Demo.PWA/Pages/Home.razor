@@ -12,18 +12,20 @@
     <MudTextField T="string" @bind-Value="_storageSettings.Key" Label="Key to save with" />
     <MudTextField T="string" @bind-Value="_model.Data" Label="Text to save" />
     <MudSwitch T="bool" @bind-Value="_cachedRequest.OneCallPerSession" Label="One call per session" />
-    <MudSwitch T="bool" @bind-Value="_cachedRequest.OneCallPerLocalStorage" Label="One call per cache" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.OneCallPerLocalStorage" Label="One call per local storage" />
     <MudNumericField T="int" @bind-Value="@_storageSettings.SessionStorageMinutesInFuture" Label="Expire session date (minutes)" />
     <MudNumericField T="int" @bind-Value="@_storageSettings.LocalStorageDaysInFuture" Label="Expire local storage (days)" />
     <MudSwitch T="bool" @bind-Value="_cachedRequest.IgnoreCache" Label="Ignore cache" />
     <MudSwitch T="bool" @bind-Value="_cachedRequest.CachedAndReplace" Label="Cached and replace" />
-    <MudSwitch T="bool" @bind-Value="_cachedRequest.AlwaysCacheWhenOffline" Label="Always cache when offline" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.CacheWhenOffline" Label="Always cache when offline" />
     <MudSwitch T="bool" @bind-Value="_cachedRequest.RetryOnJsonException" Label="Retry on JSON exception" />
+    <MudSwitch T="bool" @bind-Value="_storageSettings.MockOffline" Label="Mock offline" />
+    <MudNumericField T="int" @bind-Value="@_storageSettings.ResponseDelayInMs" Label="Delay response (ms)" />
 </MudForm>
 
 <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@Save">Save</MudButton>
 
-<MudText>Offline: @ExpireStorageService.IsOffline</MudText>
+<MudText>Offline: @_isOffline</MudText>
 <MudText>Response: @_response</MudText>
 @if (_handledBy != HandledBy.None)
 {

@@ -1,7 +1,7 @@
-namespace Drogecode.Blazor.ExpireStorage;
+namespace Drogecode.Blazor.ExpireStorage.Enums;
 
-internal enum StorageLocation
+public enum StorageLocation
 {
     BrowserLocal = 0,
-    BrowserSession =1
+    BrowserSession = 1
 }

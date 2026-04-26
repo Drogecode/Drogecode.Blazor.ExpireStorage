@@ -4,6 +4,7 @@ public enum HandledBy
 {
     None = 0,
     Function = 1,
-    Cache = 2,
-    Default = 3
+    LocalStorage = 2,
+    Session = 3,
+    Default = 4
 }
