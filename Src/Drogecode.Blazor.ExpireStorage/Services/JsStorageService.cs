@@ -1,6 +1,5 @@
-using System.Buffers.Text;
-using System.Text;
 using System.Text.Json;
+using Drogecode.Blazor.ExpireStorage.Helpers;
 using Microsoft.JSInterop;
 
 namespace Drogecode.Blazor.ExpireStorage;
@@ -17,87 +16,94 @@ internal class JsStorageService : IJsStorageService
 
     public T RetrieveItem<T>(string storageKey, StorageLocation storage, T defaultIfNull)
     {
-        var stringFromCache = storage switch
+        try
         {
-            StorageLocation.BrowserLocal => ((IJSInProcessRuntime)_jsRuntime).Invoke<string?>("localStorage.getItem", storageKey) ?? string.Empty,
-            StorageLocation.BrowserSession => ((IJSInProcessRuntime)_jsRuntime).Invoke<string?>("sessionStorage.getItem", storageKey) ?? string.Empty,
-            _ => _pageCache[storageKey]
-        };
-        if (string.IsNullOrEmpty(stringFromCache)) return defaultIfNull;
+            var stringFromCache = storage switch
+            {
+                StorageLocation.BrowserLocal => ((IJSInProcessRuntime)_jsRuntime).Invoke<string?>("localStorage.getItem", storageKey) ?? string.Empty,
+                StorageLocation.BrowserSession => ((IJSInProcessRuntime)_jsRuntime).Invoke<string?>("sessionStorage.getItem", storageKey) ?? string.Empty,
+                _ => _pageCache[storageKey]
+            };
+            if (string.IsNullOrEmpty(stringFromCache)) return defaultIfNull;
 
-        string jsonString;
-        if (Base64.IsValid(stringFromCache))
-        {
-            var utf8Byes = Convert.FromBase64String(stringFromCache);
-            jsonString = Encoding.UTF8.GetString(utf8Byes);
+            return JsonSerializer.Deserialize<T>(stringFromCache) ?? defaultIfNull;
         }
-        else
+        catch (Exception ex)
         {
-            jsonString = stringFromCache;
+            ConsoleHelper.WriteLine("Exception in RetrieveItem", ex);
+            return defaultIfNull;
         }
-
-        if (string.IsNullOrEmpty(jsonString)) return defaultIfNull;
-
-        return JsonSerializer.Deserialize<T>(jsonString) ?? defaultIfNull;
     }
 
     public async Task<T?> RetrieveItem<T>(string storageKey, StorageLocation storageLocation, CancellationToken clt = default)
     {
-        var stringFromCache = storageLocation switch
+        try
         {
-            StorageLocation.BrowserLocal => await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", clt, storageKey) ?? string.Empty,
-            StorageLocation.BrowserSession => await _jsRuntime.InvokeAsync<string?>("sessionStorage.getItem", clt, storageKey) ?? string.Empty,
-            _ => _pageCache.TryGetValue(storageKey, out string? cachedItem) ? cachedItem : string.Empty
-        };
-        string jsonString;
-        if (Base64.IsValid(stringFromCache))
-        {
-            var utf8Byes = Convert.FromBase64String(stringFromCache);
-            jsonString = Encoding.UTF8.GetString(utf8Byes);
-        }
-        else
-        {
-            jsonString = stringFromCache;
+            var stringFromCache = storageLocation switch
+            {
+                StorageLocation.BrowserLocal => await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", clt, storageKey) ?? string.Empty,
+                StorageLocation.BrowserSession => await _jsRuntime.InvokeAsync<string?>("sessionStorage.getItem", clt, storageKey) ?? string.Empty,
+                _ => _pageCache.TryGetValue(storageKey, out string? cachedItem) ? cachedItem : string.Empty
+            };
+
+            if (string.IsNullOrEmpty(stringFromCache)) return default;
+
+            return JsonSerializer.Deserialize<T>(stringFromCache) ?? default;
         }
 
-        if (string.IsNullOrEmpty(jsonString)) return default;
-
-        return JsonSerializer.Deserialize<T>(jsonString) ?? default;
+        catch (Exception ex)
+        {
+            ConsoleHelper.WriteLine("Exception in RetrieveItem (async)", ex);
+            return default;
+        }
     }
 
     public async Task StoreItem<T>(string storageKey, StorageLocation storageLocation, T itemToStore, CancellationToken clt = default)
     {
-        var utf8Byes = JsonSerializer.SerializeToUtf8Bytes<T>(itemToStore);
-        var base64String = Convert.ToBase64String(utf8Byes);
-
-        switch (storageLocation)
+        try
         {
-            case StorageLocation.BrowserLocal:
-                await _jsRuntime.InvokeVoidAsync("localStorage.setItem", clt, storageKey, base64String);
-                break;
-            case StorageLocation.BrowserSession:
-                await _jsRuntime.InvokeVoidAsync("sessionStorage.setItem", clt, storageKey, base64String);
-                break;
-            default:
-                _pageCache[storageKey] = base64String;
-                break;
+            var asString = JsonSerializer.Serialize(itemToStore);
+
+            switch (storageLocation)
+            {
+                case StorageLocation.BrowserLocal:
+                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", clt, storageKey, asString);
+                    break;
+                case StorageLocation.BrowserSession:
+                    await _jsRuntime.InvokeVoidAsync("sessionStorage.setItem", clt, storageKey, asString);
+                    break;
+                default:
+                    _pageCache[storageKey] = asString;
+                    break;
+            }
+        }
+
+        catch (Exception ex)
+        {
+            ConsoleHelper.WriteLine("Exception in StoreItem", ex);
         }
     }
 
-
     public async Task RemoveItem(string storageKey, StorageLocation storageLocation, CancellationToken clt = default)
     {
-        switch (storageLocation)
+        try
         {
-            case StorageLocation.BrowserLocal:
-                await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", clt, storageKey);
-                break;
-            case StorageLocation.BrowserSession:
-                await _jsRuntime.InvokeVoidAsync("sessionStorage.removeItem", clt, storageKey);
-                break;
-            default:
-                _pageCache.Remove(storageKey);
-                break;
+            switch (storageLocation)
+            {
+                case StorageLocation.BrowserLocal:
+                    await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", clt, storageKey);
+                    break;
+                case StorageLocation.BrowserSession:
+                    await _jsRuntime.InvokeVoidAsync("sessionStorage.removeItem", clt, storageKey);
+                    break;
+                default:
+                    _pageCache.Remove(storageKey);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            ConsoleHelper.WriteLine("Exception in RemoveItem", ex);
         }
     }
 }
