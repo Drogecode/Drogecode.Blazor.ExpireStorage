@@ -97,15 +97,15 @@ public class LocalStorageExpireService : ILocalStorageExpireService
         }
     }
 
-    public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
+    public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken clt = default)
     {
-        var value = await _jsStorageService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserLocal);
+        var value = await _jsStorageService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserLocal, clt);
         if (value is null || value.Data is null)
             return default(T);
         if (value.Ttl < DateTime.UtcNow.Ticks)
         {
             ConsoleHelper.WriteLine($"localstorage deleting {key}, expired {new DateTime(value.Ttl)} on trying to get");
-            await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal);
+            await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal, clt);
             return default(T);
         }
 
@@ -113,18 +113,18 @@ public class LocalStorageExpireService : ILocalStorageExpireService
         return result;
     }
 
-    public async ValueTask SetItemAsync<T>(string key, T data, DateTime expire, CancellationToken cancellationToken = default)
+    public async ValueTask SetItemAsync<T>(string key, T data, DateTime expire, CancellationToken clt = default)
     {
         var value = new ExpiryStorageModel<T>
         {
             Data = data,
             Ttl = expire.Ticks,
         };
-        await _jsStorageService.StoreItem(key, StorageLocation.BrowserLocal, value);
+        await _jsStorageService.StoreItem(key, StorageLocation.BrowserLocal, value, clt);
     }
 
     public async Task DeleteItemAsync(string key, CancellationToken clt)
     {
-        await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal);
+        await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal, clt);
     }
 }

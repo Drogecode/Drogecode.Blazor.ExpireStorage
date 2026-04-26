@@ -13,7 +13,7 @@ public class SessionExpireService : ISessionExpireService
 
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken clt = default)
     {
-        var value = await _jsStorageService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserSession);
+        var value = await _jsStorageService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserSession, clt);
         var ttl = DateTime.UtcNow.Ticks;
         if (value is null || value.Data is null || value.Ttl <= ttl) return default;
         var result = value.Data;
@@ -27,6 +27,6 @@ public class SessionExpireService : ISessionExpireService
             Data = data,
             Ttl = expire.Ticks
         };
-        await _jsStorageService.StoreItem(key, StorageLocation.BrowserSession, value);
+        await _jsStorageService.StoreItem(key, StorageLocation.BrowserSession, value, clt);
     }
 }

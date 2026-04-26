@@ -11,7 +11,7 @@ public class MockJsStorageService : IJsStorageService
         _memoryCache = memoryCache;
     }
 
-    public T RetrieveItem<T>(string storageKey, StorageLocation storageLocation, T defaultIfNull) where T : notnull
+    public T RetrieveItem<T>(string storageKey, StorageLocation storageLocation, T defaultIfNull)
     {
         if (_memoryCache.TryGetValue(storageKey + storageLocation, out object? value))
         {
@@ -29,12 +29,12 @@ public class MockJsStorageService : IJsStorageService
         return defaultIfNull;
     }
 
-    public async Task StoreItem<T>(string storageKey, StorageLocation storageLocation, T itemToStore) where T : notnull
+    public async Task StoreItem<T>(string storageKey, StorageLocation storageLocation, T itemToStore, CancellationToken clt = default)
     {
         _memoryCache.Set(storageKey + storageLocation, itemToStore);
     }
 
-    public async Task<T?> RetrieveItem<T>(string storageKey, StorageLocation storageLocation)
+    public async Task<T?> RetrieveItem<T>(string storageKey, StorageLocation storageLocation, CancellationToken clt = default)
     {
         if (_memoryCache.TryGetValue(storageKey + storageLocation, out object? value))
         {
@@ -52,7 +52,7 @@ public class MockJsStorageService : IJsStorageService
         return default;
     }
 
-    public async Task RemoveItem(string storageKey, StorageLocation storageLocation)
+    public async Task RemoveItem(string storageKey, StorageLocation storageLocation, CancellationToken clt = default)
     {
         _memoryCache.Remove(storageKey + storageLocation);
     }
