@@ -134,11 +134,7 @@ public class YourObjectResponse : ICacheableResponse
 }
 ```
 
-## Cache
-
-The cache is stored as a base64 string and serialized / deserialized using System.Text.Json.
-
-### Cleanup
+## Cache cleanup
 
 One minute after the app starts, the local storage cache will be cleared from all expired values.
 
