@@ -38,7 +38,7 @@ public sealed partial class Home : IDisposable
         var value = await StorageService.CachedRequestAsync(_storageSettings.Key,
             async () => await FunctionToCall(),
             _cachedRequest,
-            new DemoModelForStorage(),
+            new DemoModelForStorage { Data = "Default object returned." },
             _cls.Token);
         _response = value?.Data ?? "No data";
         _handledBy = value?.HandledBy ?? HandledBy.None;
@@ -52,7 +52,7 @@ public sealed partial class Home : IDisposable
         {
             await Task.Delay(_storageSettings.ResponseDelayInMs);
         }
-        
+
         if (_storageSettings.MockOffline)
         {
             throw new HttpRequestException("Mock offline");
@@ -60,8 +60,7 @@ public sealed partial class Home : IDisposable
 
         return _model;
     }
-    
-    
+
     private Task OfflineChanged(bool newValue)
     {
         _isOffline = newValue;
