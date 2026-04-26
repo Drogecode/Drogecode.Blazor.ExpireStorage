@@ -1,7 +1,7 @@
 using Drogecode.Blazor.ExpireStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using ExpireStorage.Demo.PWA;
+using ExpireStorage.Demo;
 using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

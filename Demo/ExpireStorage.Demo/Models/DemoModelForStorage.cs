@@ -1,6 +1,6 @@
 using Drogecode.Blazor.ExpireStorage;
 
-namespace ExpireStorage.Demo.PWA.Models;
+namespace ExpireStorage.Demo.Models;
 
 public class DemoModelForStorage : ICacheableResponse
 {

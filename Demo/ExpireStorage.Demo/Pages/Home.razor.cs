@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using Drogecode.Blazor.ExpireStorage;
-using ExpireStorage.Demo.PWA.Models;
+using ExpireStorage.Demo.Models;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace ExpireStorage.Demo.PWA.Pages;
+namespace ExpireStorage.Demo.Pages;
 
 public sealed partial class Home : IDisposable
 {

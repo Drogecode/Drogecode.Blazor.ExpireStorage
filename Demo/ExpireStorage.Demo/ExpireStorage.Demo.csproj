@@ -5,7 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
-    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <AssemblyName>ExpireStorage.Demo</AssemblyName>
+    <RootNamespace>ExpireStorage.Demo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,10 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.7" PrivateAssets="all" />
     <PackageReference Include="Microsoft.DotNet.HotReload.WebAssembly.Browser" Version="10.0.203" />
     <PackageReference Include="MudBlazor" Version="9.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ServiceWorker Include="wwwroot\\service-worker.js" PublishedContent="wwwroot\\service-worker.published.js" />
   </ItemGroup>
 
   <ItemGroup>

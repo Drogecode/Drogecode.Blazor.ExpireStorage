@@ -1,4 +1,4 @@
-namespace ExpireStorage.Demo.PWA.Models;
+namespace ExpireStorage.Demo.Models;
 
 public class StorageSettings
 {
