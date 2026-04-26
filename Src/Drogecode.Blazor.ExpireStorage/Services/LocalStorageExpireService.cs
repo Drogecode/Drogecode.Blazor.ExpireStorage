@@ -1,9 +1,7 @@
 ﻿using System.Buffers.Text;
 using System.Text;
 using System.Text.Json;
-using Drogecode.Blazor.ExpireStorage.Enums;
 using Drogecode.Blazor.ExpireStorage.Helpers;
-using Drogecode.Blazor.ExpireStorage.Interfaces;
 using Drogecode.Blazor.ExpireStorage.Models;
 using Microsoft.JSInterop;
 
@@ -11,13 +9,13 @@ namespace Drogecode.Blazor.ExpireStorage;
 
 public class LocalStorageExpireService : ILocalStorageExpireService
 {
-    private readonly IExpireStorageJsService _expireStorageJsService;
+    private readonly IJsStorageService _jsStorageService;
     private readonly IJSRuntime _jsRuntime;
     private Lazy<IJSObjectReference> _accessorJsRef = new();
 
-    public LocalStorageExpireService(IExpireStorageJsService expireStorageJsService, IJSRuntime jsRuntime)
+    public LocalStorageExpireService(IJsStorageService jsStorageService, IJSRuntime jsRuntime)
     {
-        _expireStorageJsService = expireStorageJsService;
+        _jsStorageService = jsStorageService;
         _jsRuntime = jsRuntime;
 
         //Fire and forget
@@ -80,7 +78,7 @@ public class LocalStorageExpireService : ILocalStorageExpireService
 
                 if (expiryStorageModel.Ttl >= ttl) continue;
                 ConsoleHelper.WriteLine($"localstorage deleting {package.Key}, expired {new DateTime(expiryStorageModel.Ttl)}");
-                await _expireStorageJsService.RemoveItem(package.Key, StorageLocation.BrowserLocal);
+                await _jsStorageService.RemoveItem(package.Key, StorageLocation.BrowserLocal);
                 count++;
             }
 
@@ -101,13 +99,13 @@ public class LocalStorageExpireService : ILocalStorageExpireService
 
     public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
     {
-        var value = await _expireStorageJsService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserLocal);
+        var value = await _jsStorageService.RetrieveItem<ExpiryStorageModel<T?>>(key, StorageLocation.BrowserLocal);
         if (value is null || value.Data is null)
             return default(T);
         if (value.Ttl < DateTime.UtcNow.Ticks)
         {
             ConsoleHelper.WriteLine($"localstorage deleting {key}, expired {new DateTime(value.Ttl)} on trying to get");
-            await _expireStorageJsService.RemoveItem(key, StorageLocation.BrowserLocal);
+            await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal);
             return default(T);
         }
 
@@ -122,11 +120,11 @@ public class LocalStorageExpireService : ILocalStorageExpireService
             Data = data,
             Ttl = expire.Ticks,
         };
-        await _expireStorageJsService.StoreItem(key, StorageLocation.BrowserLocal, value);
+        await _jsStorageService.StoreItem(key, StorageLocation.BrowserLocal, value);
     }
 
     public async Task DeleteItemAsync(string key, CancellationToken clt)
     {
-        await _expireStorageJsService.RemoveItem(key, StorageLocation.BrowserLocal);
+        await _jsStorageService.RemoveItem(key, StorageLocation.BrowserLocal);
     }
 }

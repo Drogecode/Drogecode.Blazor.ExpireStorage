@@ -1,5 +1,4 @@
-﻿using Drogecode.Blazor.ExpireStorage.Interfaces;
-using Drogecode.Blazor.ExpireStorage.Tests.Mocks;
+﻿using Drogecode.Blazor.ExpireStorage.Tests.Mocks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Xunit.DependencyInjection.Logging;
@@ -16,7 +15,7 @@ public class Startup
         services.AddScoped<IExpireStorageService, ExpireStorageService>();
         
         services.AddScoped<IJSRuntime, JSRuntimeMock>();
-        services.AddScoped<IExpireStorageJsService, MockExpireStorageJsService>();
+        services.AddScoped<IJsStorageService, MockJsStorageService>();
 
         services.AddLogging(lb => lb.AddXunitOutput());
     }

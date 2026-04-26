@@ -1,6 +1,4 @@
-﻿using Drogecode.Blazor.ExpireStorage.Interfaces;
-using Drogecode.Blazor.ExpireStorage.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Drogecode.Blazor.ExpireStorage;
@@ -12,7 +10,7 @@ public static class BuilderHelper
         services.TryAddScoped<ILocalStorageExpireService, LocalStorageExpireService>();
         services.TryAddScoped<ISessionExpireService, SessionExpireService>();
         services.TryAddScoped<IExpireStorageService, ExpireStorageService>();
-        services.TryAddScoped<IExpireStorageJsService, ExpireStorageJsService>();
+        services.TryAddScoped<IJsStorageService, JsStorageService>();
         return services;
     }
 
@@ -21,7 +19,7 @@ public static class BuilderHelper
         services.TryAddSingleton<ILocalStorageExpireService, LocalStorageExpireService>();
         services.TryAddSingleton<ISessionExpireService, SessionExpireService>();
         services.TryAddSingleton<IExpireStorageService, ExpireStorageService>();
-        services.TryAddSingleton<IExpireStorageJsService, ExpireStorageJsService>();
+        services.TryAddSingleton<IJsStorageService, JsStorageService>();
         return services;
     }
 }

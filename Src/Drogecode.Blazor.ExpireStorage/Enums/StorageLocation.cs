@@ -1,4 +1,4 @@
-namespace Drogecode.Blazor.ExpireStorage.Enums;
+namespace Drogecode.Blazor.ExpireStorage;
 
 public enum StorageLocation
 {

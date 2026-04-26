@@ -1,23 +1,20 @@
 using System.Text;
 using System.Text.Json;
-using Drogecode.Blazor.ExpireStorage.Enums;
-using Drogecode.Blazor.ExpireStorage.Helpers;
-using Drogecode.Blazor.ExpireStorage.Interfaces;
 using Microsoft.JSInterop;
 
-namespace Drogecode.Blazor.ExpireStorage.Services;
+namespace Drogecode.Blazor.ExpireStorage;
 
-internal class ExpireStorageJsService : IExpireStorageJsService
+internal class JsStorageService : IJsStorageService
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly Dictionary<string, string> _pageCache = new();
 
-    public ExpireStorageJsService(IJSRuntime jsRuntime)
+    public JsStorageService(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
     }
 
-    public T RetrieveItem<T>(string storageKey, StorageLocation storage, T defaultIfNull) where T : notnull
+    public T RetrieveItem<T>(string storageKey, StorageLocation storage, T defaultIfNull)
     {
         var base64String = storage switch
         {
@@ -34,7 +31,7 @@ internal class ExpireStorageJsService : IExpireStorageJsService
         return JsonSerializer.Deserialize<T>(jsonString) ?? defaultIfNull;
     }
 
-    public async Task StoreItem<T>(string storageKey, StorageLocation storageLocation, T itemToStore) where T : notnull
+    public async Task StoreItem<T>(string storageKey, StorageLocation storageLocation, T itemToStore)
     {
         var utf8Byes = JsonSerializer.SerializeToUtf8Bytes<T>(itemToStore);
         var base64String = Convert.ToBase64String(utf8Byes);
@@ -61,9 +58,6 @@ internal class ExpireStorageJsService : IExpireStorageJsService
             StorageLocation.BrowserSession => await _jsRuntime.InvokeAsync<string?>("sessionStorage.getItem", storageKey) ?? string.Empty,
             _ => _pageCache.TryGetValue(storageKey, out string? cachedItem) ? cachedItem : string.Empty
         };
-
-        ConsoleHelper.WriteLine($"base64String: {base64String}");
-
         if (string.IsNullOrEmpty(base64String)) return default;
         var utf8Byes = Convert.FromBase64String(base64String);
         var jsonString = Encoding.UTF8.GetString(utf8Byes);
