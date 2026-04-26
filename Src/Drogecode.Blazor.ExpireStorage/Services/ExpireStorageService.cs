@@ -82,10 +82,10 @@ public class ExpireStorageService : IExpireStorageService
 
             if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
             {
-                var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-                if (cacheResult is not null)
+                var storageResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
+                if (storageResult is not null)
                 {
-                    return BuildResponse(cacheResult, HandledBy.LocalStorage);
+                    return BuildResponse(storageResult, HandledBy.LocalStorage);
                 }
             }
 
@@ -93,27 +93,7 @@ public class ExpireStorageService : IExpireStorageService
             {
                 return await RunSaveAndReturn(cacheKey, function, request, clt);
             }
-        }
-        catch (HttpRequestException)
-        {
-            ConsoleHelper.WriteLine("a HttpRequestException");
-            IsOffline = true;
-        }
-        catch (TaskCanceledException)
-        {
-        }
-        catch (Exception ex)
-        {
-            ConsoleHelper.WriteLine(ex);
-        }
-
-        if (request.IgnoreCache)
-        {
-            return BuildResponse(defaultResponse, HandledBy.Default);
-        }
-
-        try
-        {
+            
             var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
             if (cacheResult is not null)
             {
@@ -131,7 +111,7 @@ public class ExpireStorageService : IExpireStorageService
         }
         catch (HttpRequestException)
         {
-            ConsoleHelper.WriteLine("b HttpRequestException");
+            ConsoleHelper.WriteLine("HttpRequestException");
             IsOffline = true;
         }
         catch (TaskCanceledException)
