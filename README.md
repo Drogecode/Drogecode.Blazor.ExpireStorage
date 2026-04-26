@@ -51,13 +51,13 @@ public static async Task Main(string[] args)
 
 ### Parameters
 
-| Parameter                 | Required | Description                                                                              |
-|---------------------------|----------|------------------------------------------------------------------------------------------|
-| string cacheKey           | Required | The key to use for the cache.                                                            |
-| Func<Task<TRes>> function | Required | The function to call.                                                                    |
-| CachedRequest? request    | Optional | settings for the cache request (explained below).                                        |
-| TRes? defaultResponse     | Optional | default value to return if the function failed or was not called and the cache is empty. |
-| CancellationToken clt     | Optional | a cancellation token.                                                                    |
+| Parameter                 | Description                                                                              | Required | 
+|---------------------------|------------------------------------------------------------------------------------------|----------|
+| string cacheKey           | The key to use for the cache.                                                            | Required |
+| Func<Task<TRes>> function | The function to call.                                                                    | Required |
+| CachedRequest? request    | settings for the cache request (explained below).                                        | Optional |
+| TRes? defaultResponse     | default value to return if the function failed or was not called and the cache is empty. | Optional |
+| CancellationToken clt     | a cancellation token.                                                                    | Optional |
 
 ### Example
 
