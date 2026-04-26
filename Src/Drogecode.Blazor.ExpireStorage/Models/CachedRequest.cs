@@ -10,7 +10,7 @@ public class CachedRequest
     /// <summary>
     /// One call per local storage cache, but not expired.
     /// </summary>
-    public bool OneCallPerCache { get; set; }
+    public bool OneCallPerLocalStorage { get; set; }
     
     /// <summary>
     /// Will be deleted from local storge when this time has passed. UTC

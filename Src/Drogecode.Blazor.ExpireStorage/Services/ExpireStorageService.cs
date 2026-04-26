@@ -79,7 +79,7 @@ public class ExpireStorageService : IExpireStorageService
                 }
             }
 
-            if ((request.CachedAndReplace || request.OneCallPerCache || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
+            if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.AlwaysCacheWhenOffline)) && !request.IgnoreCache)
             {
                 var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
                 if (cacheResult is not null)

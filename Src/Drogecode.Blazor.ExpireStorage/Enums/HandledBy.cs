@@ -2,7 +2,8 @@ namespace Drogecode.Blazor.ExpireStorage;
 
 public enum HandledBy
 {
-    Function = 0,
-    Cache = 1,
-    Default = 2
+    None = 0,
+    Function = 1,
+    Cache = 2,
+    Default = 3
 }

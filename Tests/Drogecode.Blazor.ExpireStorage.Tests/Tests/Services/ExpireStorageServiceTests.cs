@@ -57,7 +57,7 @@ public class ExpireStorageServiceTests : IDisposable
             {
                 Data = "not called"
             }),
-            new CachedRequest { OneCallPerCache = true },
+            new CachedRequest { OneCallPerLocalStorage = true },
             clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);
         response.HandledBy.Should().Be(HandledBy.Cache);
@@ -79,7 +79,7 @@ public class ExpireStorageServiceTests : IDisposable
         response2.HandledBy.Should().Be(HandledBy.Function);
 
         ExpireStorageService.Postfix = "user1";
-        var response1FromCache = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "not called" }), new CachedRequest { OneCallPerCache = true }, clt: TestContext.Current.CancellationToken);
+        var response1FromCache = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "not called" }), new CachedRequest { OneCallPerLocalStorage = true }, clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response1FromCache?.Data);
         response1FromCache.Data.Should().Be("data1");
         response1FromCache.HandledBy.Should().Be(HandledBy.Cache);
@@ -89,7 +89,7 @@ public class ExpireStorageServiceTests : IDisposable
     public async Task IgnoreCacheTest()
     {
         const string cacheKey = "IgnoreCacheTest";
-        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "cached" }), new CachedRequest { OneCallPerCache = true }, clt: TestContext.Current.CancellationToken);
+        await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "cached" }), new CachedRequest { OneCallPerLocalStorage = true }, clt: TestContext.Current.CancellationToken);
 
         var response = await _expireStorageService.CachedRequestAsync<TestStringResponse>(cacheKey, () => Task.FromResult(new TestStringResponse { Data = "fresh" }), new CachedRequest { IgnoreCache = true }, clt: TestContext.Current.CancellationToken);
         Assert.NotNull(response?.Data);

@@ -1,0 +1,31 @@
+@page "/"
+@using Drogecode.Blazor.ExpireStorage
+
+<PageTitle>Demo ExireStorage NuGet</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Welcome and lets play with ExpireStorage!</MudText>
+
+<MudText>You can play a bit with the settings in the form below.</MudText>
+<MudText>Remember your key and close and open the browser to see the workings</MudText>
+
+<MudForm @ref="_form">
+    <MudTextField T="string" @bind-Value="_storageSettings.Key" Label="Key to save with" />
+    <MudTextField T="string" @bind-Value="_model.Data" Label="Text to save" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.OneCallPerSession" Label="One call per session" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.OneCallPerLocalStorage" Label="One call per cache" />
+    <MudNumericField T="int" @bind-Value="@_storageSettings.SessionStorageMinutesInFuture" Label="Expire session date (minutes)" />
+    <MudNumericField T="int" @bind-Value="@_storageSettings.LocalStorageDaysInFuture" Label="Expire local storage (days)" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.IgnoreCache" Label="Ignore cache" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.CachedAndReplace" Label="Cached and replace" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.AlwaysCacheWhenOffline" Label="Always cache when offline" />
+    <MudSwitch T="bool" @bind-Value="_cachedRequest.RetryOnJsonException" Label="Retry on JSON exception" />
+</MudForm>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@Save">Save</MudButton>
+
+<MudText>Offline: @ExpireStorageService.IsOffline</MudText>
+<MudText>Response: @_response</MudText>
+@if (_handledBy != HandledBy.None)
+{
+    <MudText>Handled by: @_handledBy</MudText>
+}

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Demo/">
+    <Project Path="Demo/ExpireStorage.Demo.PWA/ExpireStorage.Demo.PWA.csproj" />
+  </Folder>
   <Project Path="Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" />
   <Project Path="Tests/Drogecode.Blazor.ExpireStorage.Tests/Drogecode.Blazor.ExpireStorage.Tests.csproj" />
 </Solution>

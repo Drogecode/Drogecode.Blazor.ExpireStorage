@@ -1,5 +1,4 @@
 [![Nuget version](https://img.shields.io/nuget/v/Drogecode.Blazor.ExpireStorage.svg?logo=nuget)](https://www.nuget.org/packages/Drogecode.Blazor.ExpireStorage/)
-[![Nuget downloads](https://img.shields.io/nuget/dt/Drogecode.Blazor.ExpireStorage?logo=nuget)](https://www.nuget.org/packages/Drogecode.Blazor.ExpireStorage/)
 
 # Drogecode.Blazor.ExpireStorage
 Adds a wrapper on top of [Blazored.LocalStorage](https://github.com/Blazored/LocalStorage) and [Blazored.SessionStorage](https://github.com/Blazored/SessionStorage) to expire items from localstorage and sessionstorage after a specified time.
@@ -60,7 +59,7 @@ example
     public async Task<YourObjectResponse?> GetDayItemsAsync(DateRange dateRange, Guid userId, CancellationToken clt)
     {
         var cacheKey = "CACHE_KEY_HERE"
-        var response = await storageService.CachedRequestAsync(cacheKey),
+        var response = await storageService.CachedRequestAsync(cacheKey,
             async () => await apiClient.GetItemsAsync(),
             new CachedRequest{CachedAndReplace = true},
             new YourObjectResponse(),
@@ -77,7 +76,7 @@ example
 You can give optional settings to the CachedRequest object.
 
 * **OneCallPerSession** - If true, the result will be returned from sessionstorage if it is not expired. *Default: false*
-* **OneCallPerCache** - If true, the result will be returned from localstorage if it is not expired. *Default: false*
+* **OneCallPerLocalStorage** - If true, the result will be returned from localstorage if it is not expired. *Default: false*
 * **IgnoreCache** - If true, never return a cached result. *Default: false*
 * **ExpireLocalStorage** - The time to expire the result in localstorage. *Default: 7 days.*
 * **ExpireSessionStorage** - The time to expire the result in sessionstorage. *Default: 15 minutes.*
