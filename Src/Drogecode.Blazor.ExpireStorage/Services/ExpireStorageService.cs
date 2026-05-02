@@ -36,6 +36,9 @@ public class ExpireStorageService : IExpireStorageService
         set => ConsoleHelper.LogToConsole = value;
     }
 
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly HashSet<string> _activeRequests = new();
+
     public ExpireStorageService(
         ILocalStorageExpireService localStorageExpireService,
         ISessionExpireService sessionStorageExpireService)
@@ -60,58 +63,94 @@ public class ExpireStorageService : IExpireStorageService
                 cacheKey += $"__{Postfix}";
             }
 
-            if (clt.IsCancellationRequested)
+            if (!await _semaphore.WaitAsync(TimeSpan.FromSeconds(10), clt))
             {
+                ConsoleHelper.WriteLine("Timeout waiting for semaphore in CachedRequestAsync");
                 return BuildResponse(defaultResponse, HandledBy.Default);
             }
-
-            if (request.CachedAndReplace && !(IsOffline && request.CacheWhenOffline))
+            try
             {
-                var requestCopy = request;
-                _ = Task.Run(async () => await RunSaveAndReturn(cacheKey, function, requestCopy, clt), clt);
-            }
-
-            if ((request.CachedAndReplace || request.OneCallPerSession || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
-            {
-                var sessionResult = await _sessionStorageExpireService.GetItemAsync<TRes>(cacheKey, clt);
-                if (sessionResult is not null)
+                if (clt.IsCancellationRequested)
                 {
-                    return BuildResponse(sessionResult, HandledBy.Session);
+                    return BuildResponse(defaultResponse, HandledBy.Default);
                 }
-            }
 
-            if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
-            {
-                var storageResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-                if (storageResult is not null)
+                lock (_activeRequests)
                 {
-                    return BuildResponse(storageResult, HandledBy.LocalStorage);
+                    if (_activeRequests.Contains(cacheKey))
+                    {
+                        // Already requesting this key, let's avoid overlapping if it's not CachedAndReplace
+                        // If it is CachedAndReplace, it's already being handled by Task.Run
+                        if (!request.CachedAndReplace)
+                        {
+                            ConsoleHelper.WriteLine($"Already requesting {cacheKey}, skipping concurrent request");
+                            return BuildResponse(defaultResponse, HandledBy.Default);
+                        }
+                    }
                 }
-            }
 
-            if (!request.CachedAndReplace)
-            {
-                return await RunSaveAndReturn(cacheKey, function, request, clt);
-            }
-            
-            var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-            if (cacheResult is not null)
-            {
-                return BuildResponse(cacheResult, HandledBy.LocalStorage);
-            }
+                if (request.CachedAndReplace && !(IsOffline && request.CacheWhenOffline))
+                {
+                    var requestCopy = request;
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await RunSaveAndReturn(cacheKey, function, requestCopy, clt);
+                        }
+                        catch (Exception ex)
+                        {
+                            ConsoleHelper.WriteLine($"Error in background RunSaveAndReturn for {cacheKey}: {ex}");
+                        }
+                    }, clt);
+                }
 
-            cacheResult = await _sessionStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
-            if (cacheResult is not null)
-            {
-                return BuildResponse(cacheResult, HandledBy.Session);
-            }
+                if ((request.CachedAndReplace || request.OneCallPerSession || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
+                {
+                    var sessionResult = await _sessionStorageExpireService.GetItemAsync<TRes>(cacheKey, clt);
+                    if (sessionResult is not null)
+                    {
+                        return BuildResponse(sessionResult, HandledBy.Session);
+                    }
+                }
 
-            cacheResult ??= defaultResponse ?? Activator.CreateInstance<TRes>();
-            return BuildResponse(cacheResult, HandledBy.Default);
+                if ((request.CachedAndReplace || request.OneCallPerLocalStorage || (IsOffline && request.CacheWhenOffline)) && !request.IgnoreCache)
+                {
+                    var storageResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
+                    if (storageResult is not null)
+                    {
+                        return BuildResponse(storageResult, HandledBy.LocalStorage);
+                    }
+                }
+
+                if (!request.CachedAndReplace)
+                {
+                    return await RunSaveAndReturn(cacheKey, function, request, clt);
+                }
+
+                var cacheResult = await _localStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
+                if (cacheResult is not null)
+                {
+                    return BuildResponse(cacheResult, HandledBy.LocalStorage);
+                }
+
+                cacheResult = await _sessionStorageExpireService.GetItemAsync<TRes?>(cacheKey, clt);
+                if (cacheResult is not null)
+                {
+                    return BuildResponse(cacheResult, HandledBy.Session);
+                }
+
+                cacheResult ??= defaultResponse ?? Activator.CreateInstance<TRes>();
+                return BuildResponse(cacheResult, HandledBy.Default);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
         catch (HttpRequestException)
         {
-            ConsoleHelper.WriteLine("HttpRequestException");
+            ConsoleHelper.WriteLine("HttpRequestException for " + cacheKey);
             IsOffline = true;
         }
         catch (TaskCanceledException)
@@ -141,15 +180,33 @@ public class ExpireStorageService : IExpireStorageService
 
     private async Task<TRes?> RunSaveAndReturn<TRes>(string cacheKey, Func<Task<TRes>> function, CachedRequest request, CancellationToken clt)
     {
-        var result = await function();
-        await _localStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireLocalStorage, clt);
-        if (request.OneCallPerSession)
+        lock (_activeRequests)
         {
-            await _sessionStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireSession, clt);
+            if (!_activeRequests.Add(cacheKey))
+            {
+                // This shouldn't really happen with the semaphore, but for background tasks it might
+                return BuildResponse(default(TRes), HandledBy.Default);
+            }
         }
+        try
+        {
+            var result = await function();
+            await _localStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireLocalStorage, clt);
+            if (request.OneCallPerSession)
+            {
+                await _sessionStorageExpireService.SetItemAsync(cacheKey, result, request.ExpireSession, clt);
+            }
 
-        IsOffline = false;
-        return BuildResponse(result, HandledBy.Function);
+            IsOffline = false;
+            return BuildResponse(result, HandledBy.Function);
+        }
+        finally
+        {
+            lock (_activeRequests)
+            {
+                _activeRequests.Remove(cacheKey);
+            }
+        }
     }
 
     private static TRes? BuildResponse<TRes>(TRes? result, HandledBy handledBy)
