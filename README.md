@@ -6,6 +6,8 @@ Store api responses in localstorage and sessionstorage.
 
 Configure if the api should be called or the cached value will be returned if available.
 
+Ideal for Blazor WebAssembly PWA's, that should work offline.
+
 ## Installing
 
 To install the package, add the following line to the csproj file. Replacing x.x.x with the latest version number (found at the top of this file):
