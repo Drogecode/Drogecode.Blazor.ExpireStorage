@@ -1,0 +1,7 @@
+# Treat Blazor framework files as binary to prevent line ending normalization (CRLF -> LF)
+# which breaks subresource integrity (SRI) hashes.
+_framework/** binary
+*.wasm binary
+*.dll binary
+*.pdb binary
+*.js binary

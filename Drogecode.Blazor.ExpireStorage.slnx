@@ -2,6 +2,10 @@
   <Folder Name="/Demo/">
     <Project Path="Demo/ExpireStorage.Demo/ExpireStorage.Demo.csproj" />
   </Folder>
+  <Folder Name="/SolutionFiles/">
+    <File Path=".github/workflows/on-push.yml" />
+    <File Path=".github/workflows/static.yml" />
+  </Folder>
   <Project Path="Src/Drogecode.Blazor.ExpireStorage/Drogecode.Blazor.ExpireStorage.csproj" />
   <Project Path="Tests/Drogecode.Blazor.ExpireStorage.Tests/Drogecode.Blazor.ExpireStorage.Tests.csproj" />
 </Solution>
